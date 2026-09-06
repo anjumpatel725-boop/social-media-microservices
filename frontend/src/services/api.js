@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 
-const API_GATEWAY = "http://localhost:8080";
+const API_GATEWAY = import.meta.env.VITE_API_BASE_URL;
 
 export const userAPI = axios.create({
     baseURL: `${API_GATEWAY}/users`

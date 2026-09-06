@@ -465,7 +465,7 @@ function Profile() {
 
                                                     <img
                                                         src={
-                                                            `http://localhost:8080/media/file/${post.mediaId}`
+                                                            ` ${import.meta.env.VITE_API_BASE_URL}/media/file/${post.mediaId}`
                                                         }
                                                         alt="Post"
                                                         style={{

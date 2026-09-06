@@ -933,7 +933,7 @@ function Home() {
                                         {post.mediaId && (
 
                                             <img
-                                                src={`http://localhost:8080/media/file/${post.mediaId}`}
+                                                src={` ${import.meta.env.VITE_API_BASE_URL}/media/file/${post.mediaId}`}
                                                 alt="Post"
                                                 style={{
                                                     width: "100%",
