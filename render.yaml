@@ -1,34 +1,32 @@
 services:
 
-  # =========================================================
+  # =========================
   # API GATEWAY
-  # =========================================================
+  # =========================
   - type: web
     name: api-gateway
     runtime: docker
     rootDir: backend/api-gateway
     dockerfilePath: ./Dockerfile
     plan: free
-
     envVars:
       - key: EUREKA_URL
         value: https://social-media-microservices-xhq9.onrender.com/eureka/
-
       - key: PORT
         value: "8080"
 
 
-  # =========================================================
+  # =========================
   # USER SERVICE
-  # =========================================================
+  # =========================
   - type: web
     name: user-service
     runtime: docker
     rootDir: backend/user-service
     dockerfilePath: ./Dockerfile
     plan: free
-
     envVars:
+
       - key: DB_URL
         fromDatabase:
           name: socialmedia-db
@@ -51,17 +49,17 @@ services:
         value: "8081"
 
 
-  # =========================================================
+  # =========================
   # POST SERVICE
-  # =========================================================
+  # =========================
   - type: web
     name: post-service
     runtime: docker
     rootDir: backend/post-service
     dockerfilePath: ./Dockerfile
     plan: free
-
     envVars:
+
       - key: DB_URL
         fromDatabase:
           name: socialmedia-db
@@ -84,62 +82,17 @@ services:
         value: "8082"
 
 
-  # =========================================================
-  # NOTIFICATION SERVICE
-  # =========================================================
-  - type: web
-    name: notification-service
-    runtime: docker
-    rootDir: backend/notification-service
-    dockerfilePath: ./Dockerfile
-    plan: free
-
-    envVars:
-      - key: DB_URL
-        fromDatabase:
-          name: socialmedia-db
-          property: connectionString
-
-      - key: DB_USERNAME
-        fromDatabase:
-          name: socialmedia-db
-          property: user
-
-      - key: DB_PASSWORD
-        fromDatabase:
-          name: socialmedia-db
-          property: password
-
-      - key: EUREKA_URL
-        value: https://social-media-microservices-xhq9.onrender.com/eureka/
-
-      - key: RABBITMQ_HOST
-        value: rabbitmq
-
-      - key: RABBITMQ_PORT
-        value: "5672"
-
-      - key: RABBITMQ_USERNAME
-        sync: false
-
-      - key: RABBITMQ_PASSWORD
-        sync: false
-
-      - key: PORT
-        value: "8084"
-
-
-  # =========================================================
+  # =========================
   # MEDIA SERVICE
-  # =========================================================
+  # =========================
   - type: web
     name: media-service
     runtime: docker
     rootDir: backend/media-service
     dockerfilePath: ./Dockerfile
     plan: free
-
     envVars:
+
       - key: DB_URL
         fromDatabase:
           name: socialmedia-db
@@ -162,17 +115,17 @@ services:
         value: "8085"
 
 
-  # =========================================================
-  # CHAT SERVICE
-  # =========================================================
+  # =========================
+  # NOTIFICATION SERVICE
+  # =========================
   - type: web
-    name: chat-service
+    name: notification-service
     runtime: docker
-    rootDir: backend/chat-service
+    rootDir: backend/notification-service
     dockerfilePath: ./Dockerfile
     plan: free
-
     envVars:
+
       - key: DB_URL
         fromDatabase:
           name: socialmedia-db
@@ -191,8 +144,55 @@ services:
       - key: EUREKA_URL
         value: https://social-media-microservices-xhq9.onrender.com/eureka/
 
+      # External RabbitMQ
       - key: RABBITMQ_HOST
-        value: rabbitmq
+        sync: false
+
+      - key: RABBITMQ_PORT
+        value: "5672"
+
+      - key: RABBITMQ_USERNAME
+        sync: false
+
+      - key: RABBITMQ_PASSWORD
+        sync: false
+
+      - key: PORT
+        value: "8084"
+
+
+  # =========================
+  # CHAT SERVICE
+  # =========================
+  - type: web
+    name: chat-service
+    runtime: docker
+    rootDir: backend/chat-service
+    dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+
+      - key: DB_URL
+        fromDatabase:
+          name: socialmedia-db
+          property: connectionString
+
+      - key: DB_USERNAME
+        fromDatabase:
+          name: socialmedia-db
+          property: user
+
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: socialmedia-db
+          property: password
+
+      - key: EUREKA_URL
+        value: https://social-media-microservices-xhq9.onrender.com/eureka/
+
+      # External RabbitMQ
+      - key: RABBITMQ_HOST
+        sync: false
 
       - key: RABBITMQ_PORT
         value: "5672"
@@ -207,17 +207,17 @@ services:
         value: "8086"
 
 
-  # =========================================================
+  # =========================
   # ANALYTICS SERVICE
-  # =========================================================
+  # =========================
   - type: web
     name: analytics-service
     runtime: docker
     rootDir: backend/analytics-service
     dockerfilePath: ./Dockerfile
     plan: free
-
     envVars:
+
       - key: DB_URL
         fromDatabase:
           name: socialmedia-db
@@ -240,39 +240,26 @@ services:
         value: "8088"
 
 
-  # =========================================================
-  # RABBITMQ
-  # =========================================================
-  - type: pserv
-    name: rabbitmq
-    runtime: image
-    plan: starter
-
-    image:
-      url: rabbitmq:3-management
-
+  # =========================
+  # FRONTEND
+  # =========================
+  - type: web
+    name: social-media-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
     envVars:
-      - key: RABBITMQ_DEFAULT_USER
-        sync: false
-
-      - key: RABBITMQ_DEFAULT_PASS
-        sync: false
-
-      - key: RABBITMQ_ERLANG_COOKIE
-        sync: false
-
-    disk:
-      name: rabbitmq-data
-      mountPath: /var/lib/rabbitmq
-      sizeGB: 10
+      - key: VITE_API_BASE_URL
+        value: https://api-gateway.onrender.com
 
 
-# ===========================================================
-# POSTGRESQL
-# ===========================================================
+# =========================
+# FREE POSTGRES
+# =========================
 databases:
 
   - name: socialmedia-db
     plan: free
     databaseName: socialmedia
-    user: socialmedia_user
+    user: socialmedia_user 
