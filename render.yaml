@@ -1,36 +1,49 @@
 services:
 
-  # =========================
+  # ==========================================
   # API GATEWAY
-  # =========================
+  # ==========================================
   - type: web
     name: api-gateway
     runtime: docker
     rootDir: backend/api-gateway
     dockerfilePath: ./Dockerfile
     plan: free
+
     envVars:
       - key: EUREKA_URL
         value: https://social-media-microservices-xhq9.onrender.com/eureka/
+
       - key: PORT
         value: "8080"
 
 
-  # =========================
+  # ==========================================
   # USER SERVICE
-  # =========================
+  # ==========================================
   - type: web
     name: user-service
     runtime: docker
     rootDir: backend/user-service
     dockerfilePath: ./Dockerfile
     plan: free
+
     envVars:
 
-      - key: DB_URL
+      - key: DB_HOST
         fromDatabase:
           name: socialmedia-db
-          property: connectionString
+          property: host
+
+      - key: DB_PORT
+        fromDatabase:
+          name: socialmedia-db
+          property: port
+
+      - key: DB_NAME
+        fromDatabase:
+          name: socialmedia-db
+          property: database
 
       - key: DB_USERNAME
         fromDatabase:
@@ -49,21 +62,32 @@ services:
         value: "8081"
 
 
-  # =========================
+  # ==========================================
   # POST SERVICE
-  # =========================
+  # ==========================================
   - type: web
     name: post-service
     runtime: docker
     rootDir: backend/post-service
     dockerfilePath: ./Dockerfile
     plan: free
+
     envVars:
 
-      - key: DB_URL
+      - key: DB_HOST
         fromDatabase:
           name: socialmedia-db
-          property: connectionString
+          property: host
+
+      - key: DB_PORT
+        fromDatabase:
+          name: socialmedia-db
+          property: port
+
+      - key: DB_NAME
+        fromDatabase:
+          name: socialmedia-db
+          property: database
 
       - key: DB_USERNAME
         fromDatabase:
@@ -82,21 +106,32 @@ services:
         value: "8082"
 
 
-  # =========================
+  # ==========================================
   # MEDIA SERVICE
-  # =========================
+  # ==========================================
   - type: web
     name: media-service
     runtime: docker
     rootDir: backend/media-service
     dockerfilePath: ./Dockerfile
     plan: free
+
     envVars:
 
-      - key: DB_URL
+      - key: DB_HOST
         fromDatabase:
           name: socialmedia-db
-          property: connectionString
+          property: host
+
+      - key: DB_PORT
+        fromDatabase:
+          name: socialmedia-db
+          property: port
+
+      - key: DB_NAME
+        fromDatabase:
+          name: socialmedia-db
+          property: database
 
       - key: DB_USERNAME
         fromDatabase:
@@ -115,21 +150,32 @@ services:
         value: "8085"
 
 
-  # =========================
+  # ==========================================
   # NOTIFICATION SERVICE
-  # =========================
+  # ==========================================
   - type: web
     name: notification-service
     runtime: docker
     rootDir: backend/notification-service
     dockerfilePath: ./Dockerfile
     plan: free
+
     envVars:
 
-      - key: DB_URL
+      - key: DB_HOST
         fromDatabase:
           name: socialmedia-db
-          property: connectionString
+          property: host
+
+      - key: DB_PORT
+        fromDatabase:
+          name: socialmedia-db
+          property: port
+
+      - key: DB_NAME
+        fromDatabase:
+          name: socialmedia-db
+          property: database
 
       - key: DB_USERNAME
         fromDatabase:
@@ -144,7 +190,7 @@ services:
       - key: EUREKA_URL
         value: https://social-media-microservices-xhq9.onrender.com/eureka/
 
-      # External RabbitMQ
+      # External RabbitMQ / CloudAMQP
       - key: RABBITMQ_HOST
         sync: false
 
@@ -161,21 +207,32 @@ services:
         value: "8084"
 
 
-  # =========================
+  # ==========================================
   # CHAT SERVICE
-  # =========================
+  # ==========================================
   - type: web
     name: chat-service
     runtime: docker
     rootDir: backend/chat-service
     dockerfilePath: ./Dockerfile
     plan: free
+
     envVars:
 
-      - key: DB_URL
+      - key: DB_HOST
         fromDatabase:
           name: socialmedia-db
-          property: connectionString
+          property: host
+
+      - key: DB_PORT
+        fromDatabase:
+          name: socialmedia-db
+          property: port
+
+      - key: DB_NAME
+        fromDatabase:
+          name: socialmedia-db
+          property: database
 
       - key: DB_USERNAME
         fromDatabase:
@@ -190,7 +247,7 @@ services:
       - key: EUREKA_URL
         value: https://social-media-microservices-xhq9.onrender.com/eureka/
 
-      # External RabbitMQ
+      # External RabbitMQ / CloudAMQP
       - key: RABBITMQ_HOST
         sync: false
 
@@ -207,21 +264,32 @@ services:
         value: "8086"
 
 
-  # =========================
+  # ==========================================
   # ANALYTICS SERVICE
-  # =========================
+  # ==========================================
   - type: web
     name: analytics-service
     runtime: docker
     rootDir: backend/analytics-service
     dockerfilePath: ./Dockerfile
     plan: free
+
     envVars:
 
-      - key: DB_URL
+      - key: DB_HOST
         fromDatabase:
           name: socialmedia-db
-          property: connectionString
+          property: host
+
+      - key: DB_PORT
+        fromDatabase:
+          name: socialmedia-db
+          property: port
+
+      - key: DB_NAME
+        fromDatabase:
+          name: socialmedia-db
+          property: database
 
       - key: DB_USERNAME
         fromDatabase:
@@ -240,26 +308,33 @@ services:
         value: "8088"
 
 
-  # =========================
+  # ==========================================
   # FRONTEND
-  # =========================
+  # ==========================================
   - type: web
     name: social-media-frontend
     runtime: static
+
     rootDir: frontend
+
     buildCommand: npm install && npm run build
+
     staticPublishPath: dist
+
     envVars:
       - key: VITE_API_BASE_URL
-        value: https://api-gateway.onrender.com
+        fromService:
+          type: web
+          name: api-gateway
+          envVarKey: RENDER_EXTERNAL_URL
 
 
-# =========================
-# FREE POSTGRES
-# =========================
+# ==========================================
+# POSTGRESQL DATABASE
+# ==========================================
 databases:
 
   - name: socialmedia-db
     plan: free
     databaseName: socialmedia
-    user: socialmedia_user 
+    user: socialmedia_user
