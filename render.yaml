@@ -29,7 +29,6 @@ services:
     plan: free
 
     envVars:
-
       - key: DB_HOST
         fromDatabase:
           name: socialmedia-db
@@ -73,7 +72,6 @@ services:
     plan: free
 
     envVars:
-
       - key: DB_HOST
         fromDatabase:
           name: socialmedia-db
@@ -117,7 +115,6 @@ services:
     plan: free
 
     envVars:
-
       - key: DB_HOST
         fromDatabase:
           name: socialmedia-db
@@ -161,7 +158,6 @@ services:
     plan: free
 
     envVars:
-
       - key: DB_HOST
         fromDatabase:
           name: socialmedia-db
@@ -218,7 +214,6 @@ services:
     plan: free
 
     envVars:
-
       - key: DB_HOST
         fromDatabase:
           name: socialmedia-db
@@ -275,7 +270,6 @@ services:
     plan: free
 
     envVars:
-
       - key: DB_HOST
         fromDatabase:
           name: socialmedia-db
@@ -314,7 +308,6 @@ services:
   - type: web
     name: social-media-frontend
     runtime: static
-
     rootDir: frontend
 
     buildCommand: npm install && npm run build
