@@ -71,5 +71,5 @@ https://social-media-microservices-xhq9.onrender.com
 ## 👨‍💻 Author
 
 **Anjum Patel**
-B.Tech Computer Science & Engineering
+B.Tech Computer Science & Engineering Student
 
