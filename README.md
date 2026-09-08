@@ -6,7 +6,6 @@ A full-stack social media application built using **React, Spring Boot, and Micr
 
 * 🔐 JWT Authentication & Spring Security
 * 👤 User Registration, Login & Profiles
-* 🤝 Follow / Unfollow Users
 * 📝 Create, Update & Delete Posts
 * 🖼️ Image / Media Upload
 * 💬 Real-Time Chat using WebSocket
