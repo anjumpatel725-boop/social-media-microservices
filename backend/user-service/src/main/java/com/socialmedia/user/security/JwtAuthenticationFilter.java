@@ -33,6 +33,33 @@ public class JwtAuthenticationFilter
             FilterChain filterChain)
             throws ServletException, IOException {
 
+        // ==========================================
+        // REQUEST PATH
+        // ==========================================
+
+        String path = request.getServletPath();
+
+
+        // ==========================================
+        // SKIP JWT FILTER FOR ACTUATOR
+        // ==========================================
+
+        if (path.equals("/actuator/health") ||
+            path.equals("/actuator/info")) {
+
+            filterChain.doFilter(
+                    request,
+                    response
+            );
+
+            return;
+        }
+
+
+        // ==========================================
+        // JWT FILTER LOGGING
+        // ==========================================
+
         System.out.println(
                 "================================="
         );
@@ -44,8 +71,14 @@ public class JwtAuthenticationFilter
                 + request.getRequestURI()
         );
 
+
+        // ==========================================
+        // GET AUTHORIZATION HEADER
+        // ==========================================
+
         String authHeader =
                 request.getHeader("Authorization");
+
 
         System.out.println(
                 "AUTH HEADER: "
@@ -79,10 +112,15 @@ public class JwtAuthenticationFilter
                 authHeader.substring(7);
 
 
+        // ==========================================
+        // VALIDATE TOKEN
+        // ==========================================
+
         try {
 
             String email =
                     jwtService.extractEmail(token);
+
 
             System.out.println(
                     "JWT EMAIL: " + email
@@ -109,11 +147,13 @@ public class JwtAuthenticationFilter
                                 )
                         );
 
+
                 SecurityContextHolder
                         .getContext()
                         .setAuthentication(
                                 authentication
                         );
+
 
                 System.out.println(
                         "JWT AUTHENTICATION SUCCESS"
@@ -138,7 +178,7 @@ public class JwtAuthenticationFilter
 
 
         // ==========================================
-        // CONTINUE
+        // CONTINUE FILTER CHAIN
         // ==========================================
 
         filterChain.doFilter(
